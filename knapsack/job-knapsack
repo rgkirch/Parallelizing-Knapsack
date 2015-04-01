@@ -1,0 +1,22 @@
+#!/bin/bash 
+#PBS -l walltime=5:00 
+#PBS -l ncpus=16 
+#PBS -o knapsack.out 
+#PBS -j oe 
+#PBS -q debug
+#PBS -A TG-CCR140008
+
+
+cd $PBS_O_WORKDIR
+
+# make module command available     
+source /usr/share/modules/init/bash  
+
+# load the upc module
+module load sgi-upc-devel  
+
+# echo commands from this point onwards
+set -x 
+
+# execute  
+mpirun -np $PBS_NCPUS ./knapsack -n 50000 -c 9999

@@ -1,0 +1,40 @@
+#!/bin/bash 
+#PBS -l walltime=10:00 
+#PBS -l ncpus=256 
+#PBS -o auto-knapsack.out 
+#PBS -j oe 
+#PBS -q batch 
+#PBS -A TG-CCR140008
+
+
+cd $PBS_O_WORKDIR
+
+# make module command available     
+source /usr/share/modules/init/bash  
+
+# load the upc module
+module load sgi-upc-devel  
+
+# removing old data
+rm knapsack_sum.txt
+
+# echo commands from this point onwards
+set -x  
+
+# execute
+./serial -n 50000 -c 9999 -s knapsack_sum.txt  
+mpirun -np 1 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 2 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 4 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 8 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 16 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 32 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 64 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 96 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 128 ./knapsack -n 50000 -c 999 -s knapsack_sum.txt
+mpirun -np 192 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+mpirun -np 256 ./knapsack -n 50000 -c 9999 -s knapsack_sum.txt
+./autograder -s knapsack_sum.txt
+
+
+

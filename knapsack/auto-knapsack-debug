@@ -1,0 +1,34 @@
+#!/bin/bash 
+#PBS -l walltime=10:00 
+#PBS -l ncpus=16 
+#PBS -o auto-knapsack-debug.out 
+#PBS -j oe 
+#PBS -q debug
+#PBS -A TG-CCR140008
+
+
+cd $PBS_O_WORKDIR
+
+# make module command available     
+source /usr/share/modules/init/bash  
+
+# load the upc module
+module load sgi-upc-devel  
+
+# removing old data
+rm knapsack_sum_debug.txt
+
+# echo commands from this point onwards
+set -x 
+
+# execute
+./serial -n 50000 -c 9999 -s knapsack_sum_debug.txt  
+mpirun -np 1 ./knapsack -n 50000 -c 9999 -s knapsack_sum_debug.txt
+mpirun -np 2 ./knapsack -n 50000 -c 9999 -s knapsack_sum_debug.txt
+mpirun -np 4 ./knapsack -n 50000 -c 9999 -s knapsack_sum_debug.txt
+mpirun -np 8 ./knapsack -n 50000 -c 9999 -s knapsack_sum_debug.txt
+#mpirun -np 16 ./knapsack -n 50000 -c 9999 -s knapsack_sum_debug.txt
+./autograder -s knapsack_sum_debug.txt
+
+
+
